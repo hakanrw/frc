@@ -10,6 +10,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.ShooterRPM;
+import frc.robot.subsystems.Tank;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -23,6 +28,14 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
+  public static OI IO = new OI();
+
+  // Subsystems
+  public static DriveTrain driveTrain = new DriveTrain();
+  public static ShooterRPM shooterRPM = new ShooterRPM();
+  public static LEDSubsystem ledSubsystem = new LEDSubsystem();
+  public static Tank tank = new Tank();
 
   /**
    * This function is run when the robot is first started up and should be
@@ -70,6 +83,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+
+    CommandScheduler.getInstance().run();
     switch (m_autoSelected) {
       case kCustomAuto:
         // Put custom auto code here
