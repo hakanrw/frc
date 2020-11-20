@@ -5,6 +5,7 @@ import frc.robot.RobotMap;
 import frc.robot.commands.TankManuel;
 
 public class Tank extends SubsystemBase {
+
     public Tank() {
         setDefaultCommand(new TankManuel(10));
     }

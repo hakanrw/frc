@@ -7,14 +7,18 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.ShooterRPM;
-import frc.robot.subsystems.Tank;
+import frc.robot.commands.AutonomousCommand;
+import frc.robot.subsystems.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -26,16 +30,28 @@ import frc.robot.subsystems.Tank;
 public class Robot extends TimedRobot {
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private CommandBase m_autoSelected;
+  private final SendableChooser<CommandBase> m_chooser = new SendableChooser<>();
 
-  public static OI IO = new OI();
+  public static OI IO;
 
   // Subsystems
   public static DriveTrain driveTrain = new DriveTrain();
+  public static GyroTurn gyroTurn = new GyroTurn();
   public static ShooterRPM shooterRPM = new ShooterRPM();
   public static LEDSubsystem ledSubsystem = new LEDSubsystem();
   public static Tank tank = new Tank();
+  public static TempIntake tempIntake = new TempIntake();
+  public static TempWheel tempWheel = new TempWheel();
+  public static TempShooter tempShooter = new TempShooter();
+  public static TempShooterAngle tempShooterAngle = new TempShooterAngle();
+  public static VisionTargetting visionSystem = new VisionTargetting();
+  public static TempClimb tempClimb = new TempClimb();
+
+  // Camera
+  public static NetworkTable visionTable;
+  public static CameraServer cameraServer;
+  public static UsbCamera visionCam;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -43,8 +59,19 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
+    IO = new OI();
+    RobotMap.driveSystem = new DifferentialDrive(RobotMap.left, RobotMap.right);
+    RobotMap.leftMotor1.setInverted(true);
+    RobotMap.leftMotor2.setInverted(true);
+    RobotMap.gyro.calibrate();
+
+    // Camera
+    cameraServer = CameraServer.getInstance();
+    visionCam = cameraServer.startAutomaticCapture();
+    visionCam.setResolution(640, 480);
+    visionTable = NetworkTableInstance.getDefault().getTable("chamelon-vision").getSubTable("ps3-eye camera");
+
+    m_chooser.setDefaultOption("Default Auto", new AutonomousCommand());
     SmartDashboard.putData("Auto choices", m_chooser);
   }
 
@@ -85,6 +112,7 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
 
     CommandScheduler.getInstance().run();
+    /*
     switch (m_autoSelected) {
       case kCustomAuto:
         // Put custom auto code here
@@ -94,6 +122,7 @@ public class Robot extends TimedRobot {
         // Put default auto code here
         break;
     }
+     */
   }
 
   /**

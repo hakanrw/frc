@@ -3,26 +3,21 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 
-public class TankManuel extends CommandBase {
+public class ClimbManuel extends CommandBase {
     private double power;
 
-    public TankManuel(double p) {
-        addRequirements(Robot.tank);
-        power = p;
+    public ClimbManuel(double power) {
+        addRequirements(Robot.tempClimb);
+        this.power = power;
     }
 
     @Override
     public void execute() {
-        Robot.tank.move(power);
+        Robot.tempClimb.climb(power);
     }
 
     @Override
     public boolean isFinished() {
         return false;
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        Robot.tank.move(0);
     }
 }

@@ -3,8 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.ShooterRPMSetter;
-import frc.robot.commands.TankManuel;
+import frc.robot.commands.*;
 
 public class OI {
     public Joystick joy1 = new Joystick(0);
@@ -34,36 +33,34 @@ public class OI {
     public Button R32 = new JoystickButton(joy2, 10);
 
     public OI() {
+
+        // - Chassis driver -
+        // Angle adjusting
+        blue.whileHeld(new ShooterAngleManuel(1));
+        red.whileHeld(new ShooterAngleManuel(-1));
+
+        // Shooter
+        L1.whileHeld(new ShooterManuel(1));
+
+        // Intake
+        R1.whileHeld(new Intake(-1));
+
+        // PID
+        R2.whileHeld(new ShooterRPMSetter(5500));
+        L2.whileHeld(new ShooterAngle());
+
+
+        // - Secondary driver -
         // Tank
         yellow2.whileHeld(new TankManuel(1));
         green2.whileHeld(new TankManuel(-1));
 
-        // PID
-        R2.whileHeld(new ShooterRPMSetter(5500));
+        // Wheel
+        blue2.whileHeld(new LuckyWheelManuel(1));
+        red2.whileHeld(new LuckyWheelManuel(-1));
 
-        /*
-        //Sase Sürücüsü
-        //Acı ayarlama
-        Blue.whileHeld(new ManuelAngle(1));
-        Red.whileHeld(new ManuelAngle(-1));
-        //Shooter
-        L1.whileHeld(new ShooterManuel(1));
-        //Intake
-        R1.whileHeld(new Intake(-1));
-        //PID
-        L2.whileHeld(new ShooterAngle());
-        R2.whileHeld(new ShooterRPMsetter(5500));
-        //İkinci sürücü
-        //Hazne
-        Yellow2.whileHeld(new TankManuel(1));
-        Green2.whileHeld(new TankManuel(-1));
-        //Çark
-        Blue2.whileHeld(new LuckywheelManuel(1));
-        Red2.whileHeld(new LuckywheelManuel(-1));
-        //Asansör
-        Start2.whileHeld(new ClimbManuel(-0.5));
-        Back2.whileHeld(new ClimbManuel(0.5));
-         */
+        // Elevator
+        start2.whileHeld(new ClimbManuel(-0.5));
+        back2.whileHeld(new ClimbManuel(0.5));
     }
-
 }

@@ -23,7 +23,7 @@ public class DriveTrain extends SubsystemBase {
         drive(joy.getRawAxis(1) * mult, joy.getRawAxis(3) * -mult);
     }
 
-    public void GyroDrive(ADIS16448_IMU gyro, boolean x) {
+    public void gyroDrive(ADIS16448_IMU gyro, boolean x) {
         gyro.reset();
         double angle = gyro.getAngle();
         if(x) {
